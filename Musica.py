@@ -112,7 +112,6 @@ class Musica:
                             instrumentos[instrumentos.index(inst)] = inst + '*' + partitura
                             with open('Partituras.txt', 'w') as file:
                                 file.write(reduce(lambda x, y: x + '@' + y, instrumentos))
-                            print(partituras)
                             break
                     elif cancion.title() in nombresCanciones:
                         print('\n\nLa canción que intentas agregar ya existe. Intenta con otra canción o modifica el nombre.')
