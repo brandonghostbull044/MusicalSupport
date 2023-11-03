@@ -1,3 +1,4 @@
+from functools import reduce
 partituras = open('Partituras.txt', 'r').read()
 
 class Musica:
@@ -65,3 +66,62 @@ class Musica:
             
             elif instrumento == 'exit':
                 break
+            
+    def escribirPartitura(self):
+        while True:
+            instrumento = input('\n\nIngresa el nombre del instrumento del cual quieras añadir partituras. Puedes listar los instrumentos escribiendo "List" o escribe "Exit" para salir de la creación de partituras.--> ').lower()
+            if instrumento != 'list' and instrumento != 'exit' and instrumento.capitalize() in list(self.partituras.keys()):
+                inst = ''
+                instrumentos = partituras.split('@')
+                for i in instrumentos:
+                    if i.startswith(instrumento.capitalize()):
+                        inst = i
+                        break 
+                canciones = inst.split('*')[1:]
+                nombresCanciones = list(map(lambda x: x.split('|')[0], canciones))
+                while True:
+                    cancion = input('\n\nIngresa el nombre de la canción que quieres agregar. Con el siguiente formato: \nNombre De Canción - Artista De Canción\n Puedes cambiar de instrumento ingresando "Change". --> ').lower()
+                    if cancion.title() not in nombresCanciones and cancion != 'change':
+                        partitura = cancion.strip().title() + '|'
+                        while True:
+                            metodo = input('\n\n¿Qué método quieres usar para agregar las partituras?.\n   a) Renglón por renglón.\n   b) Partitura completa.\n--> ')
+                            if metodo == 'a':
+                                while True:
+                                    print('\n\nIngresa renglón por renglón, separando cada acorde del otro con dos espacios. Cuando termines ingresa "Ok"')
+                                    linea = input('\n--> ')
+                                    if linea.lower() != 'ok':
+                                        print('\nAgregada.\n')
+                                        partitura += linea + '°'
+                                    else:
+                                        break
+                            elif metodo == 'b':
+                                pass
+                            else:
+                                print('\n\nError de escritura.')
+                                continue
+                            partitura = partitura[:-1]
+                            while True:
+                                peticion = input('\n\n¿Quieres agregar un link a la clase (Y/n)?.-->  ')
+                                if peticion.lower() == 'y':
+                                    partitura += '|' + input('Ingresa el link: ').strip()
+                                    break
+                                elif peticion.lower() == 'n':
+                                    break
+                                else:
+                                    print('\n\nError de escritura.')
+                            instrumentos[instrumentos.index(inst)] = inst + '*' + partitura
+                            with open('Partituras.txt', 'w') as file:
+                                file.write(reduce(lambda x, y: x + '@' + y, instrumentos))
+                            print(partituras)
+                            break
+                    elif cancion.title() in nombresCanciones:
+                        print('\n\nLa canción que intentas agregar ya existe. Intenta con otra canción o modifica el nombre.')
+                    elif cancion == 'change':
+                        break
+            elif instrumento == 'list':
+                for inst in list(self.partituras.keys()):
+                        print(f'\n\n     {inst}')
+            elif instrumento == 'exit':
+                break
+            else:
+                print('\n\nError de escritura.')
