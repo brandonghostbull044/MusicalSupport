@@ -1,5 +1,4 @@
 from Musica import Musica
-from partituras import partituras
 
 print('Bienvenido.')
    
